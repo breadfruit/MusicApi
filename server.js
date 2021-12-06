@@ -13,7 +13,8 @@ const cors = require("koa2-cors");
 const chalk = require("chalk");
 const context = require("@extends/context");
 const { secretKey, whiteList } = require("@core/jwt");
-
+const db = require('@models')
+const config = require('@config')
 // error handler
 onerror(app);
 
@@ -78,17 +79,16 @@ app.use(async (ctx, next) => {
 });
 
 // routes
-
 const Users = require("@routes/users");
 const Songs = require("@routes/songs");
-const SongCollection = require("@routes/song_collection");
-const SongsDetail = require("@routes/song_detail");
+const SongsCollection = require("@routes/songs_collection");
+const SongDetail = require("@routes/song_detail");
 
 
 app.use(Users.routes(), Users.allowedMethods());
 app.use(Songs.routes(), Songs.allowedMethods());
-app.use(SongCollection.routes(), SongCollection.allowedMethods());
-app.use(SongsDetail.routes(), SongsDetail.allowedMethods());
+app.use(SongsCollection.routes(), SongsCollection.allowedMethods());
+app.use(SongDetail.routes(), SongDetail.allowedMethods());
 
 
 // error-handling
@@ -96,11 +96,17 @@ app.on("error", (err, ctx) => {
   console.error("server error", err, ctx);
 });
 
-const { port } = require("@config");
-app.listen(port, () => {
-  console.log(
-    process.env.NODE_ENV === "development"
-      ? `Open ${chalk.green("http://localhost:" + port)}`
-      : `App listening on port ${port}`
-  );
-});
+
+
+app.listen(config.PORT, () => {
+  db.sequelize
+    .sync({ force: false }) // If force is true, each DAO will do DROP TABLE IF EXISTS ..., before it tries to create its own table
+    .then(async () => {
+   
+      console.log('sequelize connect success')
+      console.log(`sever listen on http://127.0.0.1:${config.PORT}`)
+    })
+    .catch(err => {
+      console.log(err)
+    })
+})

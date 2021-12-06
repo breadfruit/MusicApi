@@ -1,19 +1,20 @@
 
-const SongsModel = require("@models/song_detail");
+const SongDetailModel = require("@models/song_detail");
 const axios = require('axios');
 const host = 'http://localhost:4000'
 
 
-//查看用户歌曲详情
-async function getSongDetail(ctx) {
-   
+
+
+//添加当前歌曲到我的喜欢
+async function addToLike(ctx) {
+    ctx.success("添加当前歌曲到我的喜欢")
 }
 
 
-
-
 module.exports = {
-    getSongDetail
+    addToLike
+
 }
 
 

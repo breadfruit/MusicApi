@@ -1,11 +1,8 @@
 //歌曲详情
-const { Sequelize, Model } = require('sequelize');
+const { Sequelize } = require('sequelize');
 
-
-class SongDetailModel extends Model { }
-
-SongDetailModel.init(
-    {
+module.exports = (sequelize, dataTypes) => {
+    const songsDetail = sequelize.define('songs_detail', {
         id: {
             type: Sequelize.INTEGER,
             primaryKey: true,
@@ -14,6 +11,7 @@ SongDetailModel.init(
         },
         name: {
             type: Sequelize.STRING(100),
+            allowNull: false,
             comment: "歌名",
         },
         song_id: {
@@ -29,16 +27,28 @@ SongDetailModel.init(
         },
         avatar_url: {
             type: Sequelize.STRING(100),
-            allowNull: false,
+            allowNull: true,
             comment: "专辑图片",
         },
+        
     },
     {
         timestamps: false,
-        sequelize: require("@core/db"),
-        modelName: "song_detail",
-        tableName: "song_detail",
-    }
-)
+    })
 
-module.exports = SongDetailModel;
+
+    songsDetail.associate = models => {
+        songsDetail.hasOne(models.user, {
+            foreignKey: 'songsCollection_id',
+        })
+        songsDetail.hasOne(models.songs_to_song, {
+            foreignKey: 'song_detail_id',
+        })
+        songsDetail.hasOne(models.songs, {
+            foreignKey: 'song_id',
+        })
+    }
+   
+    return songsDetail
+}
+

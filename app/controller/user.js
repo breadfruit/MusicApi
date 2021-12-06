@@ -6,7 +6,13 @@ const axios = require('axios');
 const host = 'http://localhost:4000'
 
 
-//用户登录
+//用户注册
+async function resigterNew(ctx) {
+    ctx.success("用户注册")
+}
+
+
+//用户登录获取信息
 async function getuserinfo(ctx) {
     console.log(ctx)
     const { uid } = ctx.params;
@@ -64,13 +70,26 @@ async function getuserinfo(ctx) {
 }
 
 
-
-//修改用户信息
-async function UpdateUser() {
-    
+//更换头像
+async function updateAavatar(ctx) {
+    ctx.success("更换头像")
 }
 
+//修改用户信息
+async function updateUser(ctx) {
+    ctx.success("修改用户信息")
+}
+
+//退出
+async function logout(ctx) {
+    ctx.success("退出")
+}
 
 module.exports = {
-    getuserinfo
+    resigterNew,
+    getuserinfo,
+    updateAavatar,
+    updateUser,
+    logout,
+    
 }

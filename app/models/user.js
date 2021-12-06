@@ -1,14 +1,9 @@
-const moment = require('moment');
-const bcrypt = require('bcryptjs');
+
 const { Sequelize, Model } = require('sequelize');
 
 
-class UserModel extends Model { }
-
-
-
-UserModel.init(
-    {
+  module.exports = (sequelize, dataTypes) => {
+    const User = sequelize.define('user', {
         id: {
             type: Sequelize.INTEGER,
             primaryKey: true,
@@ -68,14 +63,19 @@ UserModel.init(
             type: Sequelize.STRING(100),
             allowNull: true,
             comment: '用户粉丝',
-        }
-    },
-    {
+        },
+    },{
         timestamps: false,
-        sequelize: require("@core/db"),
-        modelName: "user",
-        tableName: "user",
+    })
+  
+    User.associate = models => {
+        User.belongsTo(models.songs_detail, {
+            foreignKey: 'songsCollection_id',
+            
+        })
+        
     }
-)
-
-module.exports = UserModel;
+  
+    return User
+  }
+  
